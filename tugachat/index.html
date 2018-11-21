@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TugaChat!</title>
+    <!-- Latest compiled and minified CSS -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <link rel="icon" href="http://example.com/favicon.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style type="text/css">
+        @import url(https://fonts.googleapis.com/css?family=Oswald:400,300);
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .popup-box {
+            background-color: #ffffff;
+            border: 1px solid #b0b0b0;
+            bottom: 0;
+            display: none;
+            height: 415px;
+            position: fixed;
+            right: 70px;
+            width: 300px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .round.hollow {
+            margin: 40px 0 0;
+        }
+
+        .round.hollow a {
+            border: 2px solid #ff6701;
+            border-radius: 35px;
+            color: red;
+            color: #ff6701;
+            font-size: 23px;
+            padding: 10px 21px;
+            text-decoration: none;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .round.hollow a:hover {
+            border: 2px solid #000;
+            border-radius: 35px;
+            color: red;
+            color: #000;
+            font-size: 23px;
+            padding: 10px 21px;
+            text-decoration: none;
+        }
+
+        .popup-box-on {
+            display: block !important;
+        }
+
+        .popup-box .popup-head {
+            background-color: #fff;
+            clear: both;
+            color: #7b7b7b;
+            display: inline-table;
+            font-size: 21px;
+            padding: 7px 10px;
+            width: 100%;
+            font-family: Oswald;
+        }
+
+        .bg_none i {
+            border: 1px solid #ff6701;
+            border-radius: 25px;
+            color: #ff6701;
+            font-size: 17px;
+            height: 33px;
+            line-height: 30px;
+            width: 33px;
+        }
+
+        .bg_none:hover i {
+            border: 1px solid #000;
+            border-radius: 25px;
+            color: #000;
+            font-size: 17px;
+            height: 33px;
+            line-height: 30px;
+            width: 33px;
+        }
+
+        .bg_none {
+            background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+            border: medium none;
+        }
+
+        .popup-box .popup-head .popup-head-right {
+            margin: 11px 7px 0;
+        }
+
+        .popup-box .popup-messages {}
+
+        .popup-head-left img {
+            border: 1px solid #7b7b7b;
+            border-radius: 50%;
+            width: 44px;
+        }
+
+        .popup-messages-footer>textarea {
+            border-bottom: 1px solid #b2b2b2 !important;
+            height: 34px !important;
+            margin: 7px;
+            padding: 5px !important;
+            border: medium none;
+            width: 95% !important;
+        }
+
+        .popup-messages-footer {
+            background: #fff none repeat scroll 0 0;
+            bottom: 0;
+            position: absolute;
+            width: 100%;
+        }
+
+        .popup-messages-footer .btn-footer {
+            overflow: hidden;
+            padding: 2px 5px 10px 6px;
+            width: 100%;
+        }
+
+        .simple_round {
+            background: #d1d1d1 none repeat scroll 0 0;
+            border-radius: 50%;
+            color: #4b4b4b !important;
+            height: 21px;
+            padding: 0 0 0 1px;
+            width: 21px;
+        }
+
+
+
+
+
+        .popup-box .popup-messages {
+            background: #3f9684 none repeat scroll 0 0;
+            height: 275px;
+            overflow: auto;
+        }
+
+        .direct-chat-messages {
+            overflow: auto;
+            padding: 10px;
+            transform: translate(0px, 0px);
+
+        }
+
+        .popup-messages .chat-box-single-line {
+            border-bottom: 1px solid #a4c6b5;
+            height: 12px;
+            margin: 7px 0 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .popup-messages abbr.timestamp {
+            background: #3f9684 none repeat scroll 0 0;
+            color: #fff;
+            padding: 0 11px;
+        }
+
+        .popup-head-right .btn-group {
+            display: inline-flex;
+            margin: 0 8px 0 0;
+            vertical-align: top !important;
+        }
+
+        .chat-header-button {
+            background: transparent none repeat scroll 0 0;
+            border: 1px solid #636364;
+            border-radius: 50%;
+            font-size: 14px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .popup-head-right .btn-group .dropdown-menu {
+            border: medium none;
+            min-width: 122px;
+            padding: 0;
+        }
+
+        .popup-head-right .btn-group .dropdown-menu li a {
+            font-size: 12px;
+            padding: 3px 10px;
+            color: #303030;
+        }
+
+        .popup-messages abbr.timestamp {
+            background: #3f9684 none repeat scroll 0 0;
+            color: #fff;
+            padding: 0 11px;
+        }
+
+        .popup-messages .chat-box-single-line {
+            border-bottom: 1px solid #a4c6b5;
+            height: 12px;
+            margin: 7px 0 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .popup-messages .direct-chat-messages {
+            height: auto;
+        }
+
+        .popup-messages .direct-chat-text {
+            background: #dfece7 none repeat scroll 0 0;
+            border: 1px solid #dfece7;
+            border-radius: 2px;
+            color: #1f2121;
+        }
+
+        .popup-messages .direct-chat-timestamp {
+            color: #fff;
+            opacity: 0.6;
+        }
+
+        .popup-messages .direct-chat-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0 0 0 49px !important;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .popup-messages .direct-chat-info {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+
+        .popup-messages .big-round {
+            margin: -9px 0 0 !important;
+        }
+
+        .popup-messages .direct-chat-img {
+            border: 1px solid #fff;
+            background: #3f9684 none repeat scroll 0 0;
+            border-radius: 50%;
+            float: left;
+            height: 40px;
+            margin: -21px 0 0;
+            width: 40px;
+        }
+
+        .direct-chat-reply-name {
+            color: #fff;
+            font-size: 15px;
+            margin: 0 0 0 10px;
+            opacity: 0.9;
+        }
+
+        .direct-chat-img-reply-small {
+            border: 1px solid #fff;
+            border-radius: 50%;
+            float: left;
+            height: 20px;
+            margin: 0 8px;
+            width: 20px;
+            background: #3f9684;
+        }
+
+        .thumb {
+            height: 75px;
+            border: 1px solid #000;
+            margin: 10px 5px 0 0;
+        }
+
+        .popup-messages .direct-chat-msg {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .popup-messages .doted-border::after {
+            background: transparent none repeat scroll 0 0 !important;
+            border-right: 2px dotted #fff !important;
+            bottom: 0;
+            content: "";
+            left: 17px;
+            margin: 0;
+            position: absolute;
+            top: 0;
+            width: 2px;
+            display: inline;
+            z-index: -2;
+        }
+
+        .popup-messages .direct-chat-msg::after {
+            background: #fff none repeat scroll 0 0;
+            border-right: medium none;
+            bottom: 0;
+            content: "";
+            left: 17px;
+            margin: 0;
+            position: absolute;
+            top: 0;
+            width: 2px;
+            display: inline;
+            z-index: -2;
+        }
+
+        .direct-chat-text::after,
+        .direct-chat-text::before {
+
+            border-color: transparent #dfece7 transparent transparent;
+
+        }
+
+        .direct-chat-text::after,
+        .direct-chat-text::before {
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            border-color: transparent #d2d6de transparent transparent;
+            border-image: none;
+            border-width: medium;
+            content: " ";
+            height: 0;
+            pointer-events: none;
+            right: 100%;
+            top: 15px;
+            width: 0;
+        }
+
+        .direct-chat-text::after {
+            border-width: 5px;
+            margin-top: -5px;
+        }
+
+        .popup-messages .direct-chat-text {
+            background: #dfece7 none repeat scroll 0 0;
+            border: 1px solid #dfece7;
+            border-radius: 2px;
+            color: #1f2121;
+        }
+
+        .direct-chat-text {
+            background: #d2d6de none repeat scroll 0 0;
+            border: 1px solid #d2d6de;
+            border-radius: 5px;
+            color: #444;
+            margin-left: 5px;
+            margin-right: 50px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            padding: 5px 10px;
+            position: relative;
+        }
+
+        .direct-chat-text-sender {
+            background: #d2d6de none repeat scroll 0 0;
+            border: 1px solid #d2d6de;
+            border-radius: 5px;
+            color: #444;
+            font-size: 16px;
+            margin-left: 50px;
+            margin-right: 5px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            padding: 5px 10px;
+            position: relative;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-header {
+                float: none;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+
+            .navbar-collapse {
+                border-top: 1px solid transparent;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            .navbar-collapse.collapse {
+                display: none !important;
+            }
+            .navbar-nav {
+                float: none !important;
+                margin: 7.5px -15px;
+            }
+            .navbar-nav>li {
+                float: none;
+            }
+            .navbar-nav>li>a {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            .navbar-text {
+                float: none;
+                margin: 15px 0;
+            }
+            /* since 3.1.0 */
+            .navbar-collapse.collapse.in {
+                display: block !important;
+            }
+            .collapsing {
+                overflow: hidden !important;
+            }
+        }
+
+        .circle {
+            border-radius: 50%;
+        }
+
+
+        body {
+            margin-top: 30px;
+
+        }
+
+        #messageArea {
+            display: none;
+        }
+
+        .glyphicon {
+            margin-left: 3px;
+        }
+
+        .IconsActions {
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body ng-app="ChatView" ng-controller="myCtrl">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header"><a class="navbar-brand" href="#">TugaChat!</a>
+            <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li id="UserButton" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><label id="labelheader"></label><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <button id="buttonInfoHeader" style="background-color: transparent; border: none;" data-toggle="modal" data-target="#myModal" onclick="info(utilizadorativo);">{{Labels.InformacaoPerfil}}</button>
+                        <button style="background-color: transparent; border: none;" id="buttoncreateRoom" data-toggle="modal" data-target="#ModalNewRoom" onclick="">{{Labels.CriarSala}}</button>
+                    </ul>
+                </li>
+                <li id="FicheirosPartilhados" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{Labels.FicheirosPartilhados}}<span class="caret"></span></a>
+                    <ul id="fileDisplayArea" style="width: 300px; height: 200px; overflow: auto;" class="dropdown-menu">
+
+                        <!-- <div ></div> -->
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li id="LanguageButton" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{Labels.Idioma}}  <span class="caret"></span></a>
+                    <ul id="LanguageList" style="width: 300px; height: 200px; overflow: auto;" class="dropdown-menu">
+                        <!-- <div ></div> -->
+                    </ul>
+                </li>
+
+                <li id="RoomsButton" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{Labels.SalasDisponiveis}}  <span class="caret"></span></a>
+                    <ul id="RoomsList" style="width: 300px; height: 200px; overflow: auto;" class="dropdown-menu">
+                        <!-- <div ></div> -->
+                    </ul>
+                </li>
+                <li id="LogoutButtonHeader" onclick="window.location.reload();" style="margin-right: 11px; display: none;"><a><span class="glyphicon glyphicon-log-in"></span> {{Labels.TerminarSessao}}</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalNewRoom" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{Labels.CriarSala}}</h4>
+                </div>
+
+                <div class="modal-body" id="modalcreateRoom">
+                    <div class="form-group">
+                        <label>{{Labels.NomedaSala}} :</label>
+                        <input type="text" class="form-control" id="NameInputRoom">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="createroom()" class="btn btn-default" data-dismiss="modal">{{Labels.Criar}}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Information Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{Labels.InfoUserOf}} <label id="infoUserName"></label></h4>
+                </div>
+                <br/>
+                <div style="text-align: center;">
+                    <img class="circle" style="height:150px; width: 150px;" id="ProfileImage" src="" />
+                </div>
+                <br/>
+                <div class="modal-body" id="uploadPhotodiv">
+                    <!--show if is owner of this account-->
+                    <label>{{Labels.AlterarImagemPerfil}} :  </label>
+                    <input type='file' id='files' name='files[]' />
+                    <output id='list'></output>
+                </div>
+                <script type="text/javascript">
+                    function handleFileSelect(evt) {
+                        var files = evt.target.files; // FileList object
+
+                        // Loop through the FileList and render image files as thumbnails.
+                        for (var i = 0, f; f = files[i]; i++) {
+
+                            // Only process image files.
+                            if (!f.type.match('image.*')) {
+                                continue;
+                            }
+
+                            var reader = new FileReader();
+
+                            // Closure to capture the file information.
+                            reader.onload = (function(theFile) {
+                                return function(e) {
+                                    // Render thumbnail.
+                                    $("#list").html("");
+                                    var span = document.createElement('span');
+                                    span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                                        '" title="', escape(theFile.name), '"/>'
+                                    ].join('');
+
+                                    document.getElementById('list').insertBefore(span, null);
+                                    //localStorage.setItem('img', e.target.result);
+                                    var namephoto = $("#infoUserName").text();
+                                    var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(e.target.result)));
+                                    socket.emit('uploadPhoto', e.target.result, namephoto, theFile.type);
+                                    socket.emit('info', namephoto);
+                                    if (e.target.result != "") {
+                                        $("#HeaderChatImage").attr('src', e.target.result);
+                                    } else {
+                                        $("#HeaderChatImage").attr('src', 'https://cdn.dribbble.com/users/30068/screenshots/1956901/whale-chat-logo_1x.png');
+                                    }
+                                };
+                            })(f);
+
+                            // Read in the image file as a data URL.
+                            reader.readAsDataURL(f);
+                        }
+                    }
+
+                    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+                </script>
+                <div class="modal-body" id="modalInfo">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{Labels.Fechar}}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container" style="margin-top: 120px;">
+        <div id="SignupPage" class="col-md-12" style="display: none;">
+            <input id="backlogin" type="button" style="font-size: 20px;" class="btn btn-primary" value="&larr;" />
+            <div style="text-align: center;">
+                <img src="https://cdn.dribbble.com/users/30068/screenshots/1956901/whale-chat-logo_1x.png" alt="chat" height="120" width="220">
+            </div>
+            <form id="SignuserForm">
+
+                <div class="form-group">
+                    <label>{{Labels.Nome}}:</label>
+                    <input minlength="10" class="form-control" id="NomeUtilizador" />
+                    <br/>
+                    <label>{{Labels.Nickname}}:</label>
+                    <input minlength="6" class="form-control" id="sigusername" />
+                    <br/>
+                    <label>{{Labels.Password}}:</label>
+                    <input type="password" class="form-control" id="sigpassword" />
+                    <br/>
+                    <input id="signup" type="button" class="btn btn-warning" value="{{Labels.SignUp}}" />
+                </div>
+            </form>
+
+        </div>
+        <div id="userFormArea" class="row">
+            <div class="col-md-12">
+                <div style="text-align: center;">
+                    <img src="https://cdn.dribbble.com/users/30068/screenshots/1956901/whale-chat-logo_1x.png" alt="chat" height="120" width="220">
+                </div>
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>{{Labels.Nickname}}:</label>
+                        <input pattern=".{0}|.{3,10}" required title="Insira entre 3 a 10 caracteres!" class="form-control" id="username" />
+                        <br/>
+                        <label>{{Labels.Password}}:</label>
+                        <input type="password" class="form-control" id="password" />
+                        <br/>
+                        <input id="login" type="button" class="btn btn-primary" value="{{Labels.Login}}" />
+                        <input id="Gosignup" type="button" class="btn btn-warning" value="{{Labels.SignUp}}" />
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div id="messageArea" class="row">
+            <div class="col-md-4">
+                <div class="well">
+                    <h4 id="LabelRoomName"></h4>
+                    <h3>{{Labels.UtilizadoresAtivos}}</h3>
+                    <ul class="list-group" id="users"></ul>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="chat" id="chat" style="overflow: auto; height: 400px; background: #f7f7f7;"></div>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label id="userwrite">  </label>
+                        <h5>{{Labels.EmojisInfo}}</h5>
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="font-size: 18px;">
+                                <a onclick="emoji('1')">😀</a>
+                                <a onclick="emoji('2')">😄</a>
+                                <a onclick="emoji('3')">😇</a>
+                                <a onclick="emoji('4')">😈</a>
+                                <a onclick="emoji('5')">😍</a>
+                                <a onclick="emoji('6')">😎</a>
+                                <a onclick="emoji('7')">😐</a>
+                                <a onclick="emoji('8')">😒</a>
+                                <a onclick="emoji('9')">😘</a>
+                                <a onclick="emoji('10')">😛</a>
+                                <a onclick="emoji('11')">😜</a>
+                                <a onclick="emoji('12')">😞</a>
+                                <a onclick="emoji('13')">😟</a>
+                                <a onclick="emoji('14')">😡</a>
+                                <a onclick="emoji('15')">😢</a>
+                                <a onclick="emoji('16')">😤</a>
+                                <a onclick="emoji('17')">😥</a>
+                                <a onclick="emoji('18')">😨</a>
+                                <a onclick="emoji('19')">😪</a>
+                                <a onclick="emoji('20')">😬</a>
+                                <a onclick="emoji('21')">😭</a>
+                                <a onclick="emoji('22')">😮</a>
+                                <a onclick="emoji('23')">😰</a>
+                                <a onclick="emoji('24')">😱</a>
+                                <a onclick="emoji('25')">😳</a>
+                                <a onclick="emoji('26')">😶</a>
+                                <a onclick="emoji('27')">😵</a>
+                                <a onclick="emoji('28')">😷</a>
+                                <a onclick="emoji('29')">😴</a>
+                                <a onclick="emoji('30')">😏</a>
+                                <a onclick="emoji('31')">😑</a>
+                                <a onclick="emoji('32')">💩</a>
+                                <a onclick="emoji('33')">❤️</a>
+                                <a onclick="emoji('34')">👌</a>
+                            </div>
+                        </div>
+                        <label>{{Labels.InsiraMensagem}}</label>
+                        <textarea maxlength="200" style="font-size: 18px;" class="form-control" id="message"></textarea>
+                        <br/>
+                        <input type="submit" class="btn btn-primary" value="{{Labels.EnviarMensagem}}" />
+                        <input type="button" id="clearContent" class="btn btn-danger" value="{{Labels.LimparConversas}}" />
+                        <label class="btn btn-default btn-file">{{Labels.EnviarFicheiros}}<input id="fileInput" type="file" style="display: none;">
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: 'top'
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $('#RoomsButton').hide();
+        $('#LanguageButton').hide();
+        $('#FicheirosPartilhados').hide();
+        $('#UserButton').hide();
+        $('#buttoncreateRoom').hide();
+
+        // request permission on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (Notification.permission !== "granted")
+                Notification.requestPermission();
+        });
+
+        function notifyMe(title, user, msg) {
+            if (!Notification) {
+                alert('Desktop notifications not available in your browser. Try Chromium.');
+                return;
+            }
+
+            if (Notification.permission !== "granted")
+                Notification.requestPermission();
+            else {
+                var notification = new Notification(title, {
+                    icon: 'https://cdn.dribbble.com/users/30068/screenshots/1956901/whale-chat-logo_1x.png',
+                    body: user + ": " + msg,
+                });
+
+                notification.onclick = function() {
+                    window.focus();
+                };
+
+            }
+
+        }
+        var utilizadorativo = "";
+        var language = window.navigator.userLanguage || window.navigator.language;
+        var listfollow = [];
+        var listblock = [];
+        var canTranslate = false;
+        var socket = io.connect();
+        var app = angular.module("ChatView", []); 
+            app.controller("myCtrl", function($scope) {
+            $scope.Labels = {
+                Idioma: "Idioma",
+                InformacaoPerfil: "Informação do Perfil",
+                CriarSala: "Criar Nova Sala",
+                FicheirosPartilhados: "Ficheiros Partilhados",
+                SalasDisponiveis: "Salas Disponiveis",
+                TerminarSessao: "Terminar Sessão",
+                Login: "Iniciar Sessão",
+                SignUp: "Inscrever-se",
+                NomedaSala: "Nome da Sala",
+                Criar: "Criar",
+                Fechar: "Fechar",
+                InfoUserOf: "Informação do Perfil de",
+                AlterarImagemPerfil: "Alterar Imagem do Perfil",
+                Nome: "Nome",
+                Nickname: "Nome do utilizador",
+                Password: "Palavra-passe",
+                UtilizadoresAtivos: "Utilizadores Ativos",
+                EmojisInfo: "Emojis - Clique para adicionar!",
+                InsiraMensagem: "Insira a sua mensagem.",
+                EnviarMensagem: "Enviar Mensagem",
+                LimparConversas: "Limpar Conversas",
+                EnviarFicheiros: "Enviar Ficheiros",
+                PartilhouFicheiro: "Partilhou o ficheiro",
+                TraducaoAtivada: "A tradução automática foi ativada",
+                TraducaoDesativada: "A tradução automática foi desativada",
+            };
+            
+            for(item in $scope.Labels){
+                socket.emit("translateLabels",$scope.Labels[item],item,language);
+            }
+            socket.on("LabelsTranslated",function(res,item){
+                $scope.Labels[item] = res;
+                $scope.$apply();
+            }); 
+        });
+
+        function ChangeRoom(room) {
+            $('#LabelRoomName').text(room);
+            $('#chat').html("");
+            socket.emit('changeroom', room);
+        }
+
+        function createroom() {
+            socket.emit('createroom', $('#NameInputRoom').val());
+        }
+
+        function b64EncodeUnicode(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+
+        window.onload = function() {
+            var fileInput = document.getElementById('fileInput');
+            var fileDisplayArea = document.getElementById('fileDisplayArea');
+            var content = "";
+            fileInput.addEventListener('change', function(e) {
+                var file = fileInput.files[0];
+                var textType = /text.*/;
+                var imageType = /.png/;
+                var pdfType = /.pdf/;
+                var docs = "/.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel/";
+
+
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    //fileDisplayArea.innerText = reader.result;
+                    content = reader.result;
+
+
+                    //teste = reader.readAsDataURL(reader.result);
+
+                }
+                socket.emit('sendFileMessageTxt', file, file.name, utilizadorativo, file.type);
+
+                reader.readAsText(file);
+
+            });
+        }
+
+        function BufferTo64Base(arrayBuffer) {
+            var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+            return base64String;
+        }
+        socket.on('FileSendMessage', function(data, user, namefile, type) {
+            var isblock = false;
+            var notify = false;
+            var data1 = BufferTo64Base(data);
+            var color = "76, 215, 58, 0.2";
+            for (x in listblock) {
+                if (listblock[x] == user) {
+                    isblock = true;
+                }
+            }
+            for (var i = 0; i < listfollow.length; i++) {
+                if (listfollow[i] == user) {
+                    color = "255,255,0,0.3";
+                    notify = true;
+                } else {
+                    color = "76, 215, 58, 0.2";
+                }
+            }
+            if (isblock == false) {
+
+                $('#fileDisplayArea').append('<div><li type="button" style="background: rgba(' + color + '); padding: right;" class="list-group-item"><i class="glyphicon glyphicon-file" style="margin-left: 0 !important"></i>  ' + namefile + '<a href="data:' + type + ';base64,' + data1 + '" target="_blank" style="float: right; font-size: 15px; background-color: transparent; border: none; margin-left:5px;" class="glyphicon glyphicon-download-alt" data-toggle="tooltip" title="Download - ' + namefile + '" ></a><span class="badge badge-default badge-pill">' + user + '</span></li></div>');
+
+
+                $('#chat').append('<div style="background: rgba(148, 229, 152, 0.3);" class="direct-chat-text-sender"><strong> ' + user + ':</strong> ' + namefile + '<span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+
+                if (notify == true) {
+                    notifyMe(user, ": " + namefile);
+                    changeFavicon("http://www.myiconfinder.com/uploads/iconsets/256-256-f269bbc2a3bd8805b0dccb6c36dd2fac.png");
+                }
+            }
+        });
+
+
+        function info(Nickname) {
+            $("#infoUserName").text(Nickname);
+
+            $("#modalInfo").html("");
+            $("uploadPhotodiv").html("");
+            if (Nickname == utilizadorativo) {
+                $("#uploadPhotodiv").show();
+            } else {
+                $("#uploadPhotodiv").hide();
+            }
+            socket.emit('info', Nickname);
+
+        }
+
+        function translationRequest(Nickname) {
+            canTranslate = !canTranslate;
+            if (canTranslate) {
+                alert("A tradução automática foi ativada");
+            } else {
+                alert("A tradução automática foi desativada");
+            }
+            socket.emit('translationRequestEmit', Nickname);
+        }
+
+        $('#buttonInfoHeader').click(function() {
+
+            var Nickname = utilizadorativo;
+            $("#infoUserName").text(Nickname);
+
+            $("#modalInfo").html("");
+            $("uploadPhotodiv").html("");
+            if (Nickname == utilizadorativo) {
+                $("#uploadPhotodiv").show();
+            } else {
+                $("#uploadPhotodiv").hide();
+            }
+            socket.emit('info', Nickname);
+        });
+
+        function followUser(userfollow) {
+            var isblock = false;
+
+            if (listblock.length >= 1) {
+                for (var i = 0; i < listblock.length; i++) {
+                    if (listblock[i] == userfollow) {
+                        isblock = true;
+                    }
+                }
+            }
+            if (listfollow.length >= 1) {
+                for (var i = 0; i < listfollow.length; i++) {
+                    if (isblock == false) {
+                        if (listfollow[i] == userfollow) {
+                            $('#Card' + userfollow).css('background-color', 'rgba(76, 215, 58, 0.2)');
+                        } else {
+                            $('#Card' + userfollow).css('background-color', 'rgba(255,255,0,0.3)');
+                        }
+                    }
+
+                }
+            } else {
+                if (isblock == false) {
+                    $('#Card' + userfollow).css('background-color', 'rgba(255,255,0,0.3)');
+                }
+            }
+
+            if (isblock == false) {
+                socket.emit('followUser', userfollow, utilizadorativo);
+                $('#followUser' + userfollow).toggleClass('glyphicon glyphicon-eye-close glyphicon glyphicon-eye-open');
+            } else {
+                alert("Você não pode Seguir " + userfollow + ", pois este utlizador está bloqueado por si, antes de Seguir favor retire o modo de Bloqueio.");
+            }
+        }
+
+
+        function BlockUser(userfollow) {
+            var isfollower = false;
+            if (listfollow.length >= 1) {
+                for (var i = 0; i < listfollow.length; i++) {
+                    if (listfollow[i] == userfollow) {
+                        isfollower = true;
+                    }
+                }
+            }
+            if (listblock.length >= 1) {
+                for (var i = 0; i < listblock.length; i++) {
+                    if (isfollower == false) {
+                        if (listblock[i] == userfollow) {
+                            $('#Card' + userfollow).css('background-color', 'rgba(76, 215, 58, 0.2)');
+                        } else {
+                            $('#Card' + userfollow).css('background-color', 'rgba(255,0,0,0.3)');
+                        }
+                    }
+                }
+            } else {
+                if (isfollower == false) {
+                    $('#Card' + userfollow).css('background-color', 'rgba(255,0,0,0.3)');
+                }
+
+            }
+
+            if (isfollower == false) {
+                socket.emit('blockUser', userfollow, utilizadorativo);
+                $('#block' + userfollow).toggleClass('glyphicon glyphicon-thumbs-up glyphicon glyphicon-thumbs-down');
+            } else {
+                alert("Você não pode Bloquear " + userfollow + ", pois está a segui-lo, antes de Bloquear favor retire o modo de Seguir.");
+            }
+
+        }
+
+
+        function emoji(id) {
+            if (id == '1') {
+                document.getElementById("message").value += "😀";
+            }
+            if (id == '2') {
+                document.getElementById("message").value += "😄";
+            }
+            if (id == '3') {
+                document.getElementById("message").value += "😇";
+            }
+            if (id == '4') {
+                document.getElementById("message").value += "😈";
+            }
+            if (id == '5') {
+                document.getElementById("message").value += "😍";
+            }
+            if (id == '6') {
+                document.getElementById("message").value += "😎";
+            }
+            if (id == '7') {
+                document.getElementById("message").value += "😐";
+            }
+            if (id == '8') {
+                document.getElementById("message").value += "😒";
+            }
+            if (id == '9') {
+                document.getElementById("message").value += "😘";
+            }
+            if (id == '10') {
+                document.getElementById("message").value += "😛";
+            }
+            if (id == '11') {
+                document.getElementById("message").value += "😜";
+            }
+            if (id == '12') {
+                document.getElementById("message").value += "😞";
+            }
+            if (id == '13') {
+                document.getElementById("message").value += "😟";
+            }
+            if (id == '14') {
+                document.getElementById("message").value += "😡";
+            }
+            if (id == '15') {
+                document.getElementById("message").value += "😢";
+            }
+            if (id == '16') {
+                document.getElementById("message").value += "😤";
+            }
+            if (id == '17') {
+                document.getElementById("message").value += "😥";
+            }
+            if (id == '18') {
+                document.getElementById("message").value += "😨";
+            }
+            if (id == '19') {
+                document.getElementById("message").value += "😪";
+            }
+            if (id == '20') {
+                document.getElementById("message").value += "😬";
+            }
+            if (id == '21') {
+                document.getElementById("message").value += "😭";
+            }
+            if (id == '22') {
+                document.getElementById("message").value += "😮";
+            }
+            if (id == '23') {
+                document.getElementById("message").value += "😰";
+            }
+            if (id == '24') {
+                document.getElementById("message").value += "😱";
+            }
+            if (id == '25') {
+                document.getElementById("message").value += "😳";
+            }
+            if (id == '26') {
+                document.getElementById("message").value += "😶";
+            }
+            if (id == '27') {
+                document.getElementById("message").value += "😵";
+            }
+            if (id == '28') {
+                document.getElementById("message").value += "😷";
+            }
+            if (id == '29') {
+                document.getElementById("message").value += "😴";
+            }
+            if (id == '30') {
+                document.getElementById("message").value += "😏";
+            }
+            if (id == '31') {
+                document.getElementById("message").value += "😑";
+            }
+            if (id == '32') {
+                document.getElementById("message").value += "💩";
+            }
+            if (id == '33') {
+                document.getElementById("message").value += "❤️";
+            }
+            if (id == '34') {
+                document.getElementById("message").value += "👌";
+            }
+        }
+
+        function addZero(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        function getTime() {
+            var time = "";
+            var d = new Date();
+            var h = addZero(d.getHours());
+            var m = addZero(d.getMinutes());
+            var s = addZero(d.getSeconds());
+            time = h + ":" + m;
+            return time;
+        }
+
+        const changeFavicon = link => {
+            let $favicon = document.querySelector('link[rel="icon"]')
+            // If a <link rel="icon"> element already exists,
+            // change its href to the given link.
+            if ($favicon !== null) {
+                $favicon.href = link
+                // Otherwise, create a new element and append it to <head>.
+            } else {
+                $favicon = document.createElement("link")
+                $favicon.rel = "icon"
+                $favicon.href = link
+                document.head.appendChild($favicon)
+            }
+        }
+
+        $(function() {
+            changeFavicon("https://cdn.purechat.com/Content/images/StockWidgetImages/clipart/Pc-Bubble.png");
+
+            var $messageForm = $('#messageForm');
+            var $message = $('#message');
+            var $chat = $('#chat');
+            var $modalInfo = $('#modalInfo');
+            var $messageArea = $('#messageArea');
+            var $userFormArea = $('#userFormArea');
+            var $signup = $('#signup');
+            var $Gosignup = $('#Gosignup');
+            var $SignupPage = $('#SignupPage');
+            var $login = $('#login');
+            var $users = $('#users');
+            var $backlogin = $('#backlogin');
+            var $username = $('#username');
+            var $NomeUtilizador = $('#NomeUtilizador');
+            var $sigusername = $('#sigusername');
+            var $sigpassword = $('#sigpassword');
+            var $userwrite = $('#userwrite');
+            var user = "";
+
+            var $password = $('#password');
+            var $clearbtn = $('#clearContent');
+            var canChange = true;
+
+            $clearbtn.click(function() {
+                $chat.html("");
+            });
+
+            $messageForm.keypress(function(e) {
+                changeFavicon("https://cdn.purechat.com/Content/images/StockWidgetImages/clipart/Pc-Bubble.png");
+                socket.emit('writing', user);
+                if (e.which == 13 || event.keyCode == 13) {
+                    e.preventDefault();
+                    mensagem = $message.val();
+                    var receiver = "";
+                    var lastindex = 0;
+                    var finalmessage = "";
+
+
+                    if (mensagem[0] == "/" && mensagem[1] == "w") {
+
+                        for (var i = 3; i < mensagem.length; i++) {
+                            if (mensagem[i] != " ") {
+                                receiver = receiver + mensagem[i];
+                            } else {
+                                lastindex = i;
+                                break;
+                            }
+                        }
+
+                        for (var i = lastindex; i < mensagem.length; i++) {
+                            finalmessage += mensagem[i];
+                        }
+                        socket.emit('send message', finalmessage, receiver);
+                        var language = window.navigator.userLanguage || window.navigator.language;
+                        socket.emit('translate', $message.val(),language);
+                        $message.val('');
+                    } else if (mensagem[0] == "/" && mensagem[1] == "^") {
+                        for (var i = 3; i < mensagem.length; i++) {
+                            if (mensagem[i] != " ") {
+                                receiver = receiver + mensagem[i];
+                            } else {
+                                lastindex = i;
+                                break;
+                            }
+                        }
+
+                        for (var i = lastindex; i < mensagem.length; i++) {
+                            finalmessage += mensagem[i];
+                        }
+                        socket.emit('priv', receiver);
+                        $message.val('');
+
+                    } else if (mensagem[0] == "/" && mensagem[1] == "m") {
+                        for (var i = 3; i < mensagem.length; i++) {
+                            if (mensagem[i] != " ") {
+                                receiver = receiver + mensagem[i];
+                            } else {
+                                lastindex = i;
+                                break;
+                            }
+                        }
+
+                        for (var i = lastindex; i < mensagem.length; i++) {
+                            finalmessage += mensagem[i];
+                        }
+                        socket.emit('mute', receiver);
+                        $message.val('');
+
+
+                    } else if (mensagem[0] == "/" && mensagem[1] == "«") {
+                        for (var i = 3; i < mensagem.length; i++) {
+                            if (mensagem[i] != " ") {
+                                receiver = receiver + mensagem[i];
+                            } else {
+                                lastindex = i;
+                                break;
+                            }
+                        }
+
+                        for (var i = lastindex; i < mensagem.length; i++) {
+                            finalmessage += mensagem[i];
+                        }
+                        //socket.emit('restart');
+                        $message.val('');
+                    } else {
+                        if ($message.val().length > 0) {
+                            socket.emit('send message', $message.val(), receiver);
+                        }
+                        $message.val('');
+                    }
+
+                } else {
+
+                }
+
+            });
+
+            socket.on('UpdateListFollow', function(listfollowServer) {
+                listfollow = listfollowServer;
+            });
+
+            socket.on('UpdateListblock', function(listblockServer) {
+                listblock = listblockServer;
+            });
+
+            socket.on('infoUser', function(nomecompleto, typephoto, b64photo) {
+                $("#modalInfo").html("");
+                $modalInfo.append('<div><label>Nome Completo : </label> ' + nomecompleto + '<div>');
+                if (b64photo != "") {
+                    $("#ProfileImage").show();
+                    $("#ProfileImage").attr('src', b64photo);
+                } else {
+                    $("#ProfileImage").hide();
+                }
+
+
+            });
+
+            socket.on('user RealWrite', function(user1) {
+
+                if (user1 != "") {
+                    if (canChange == true) {
+                        var userswrite = [];
+                        userswrite.push(user1);
+                        canChange = false;
+                        for (var i = 0; i < userswrite.length; i++) {
+                            if (userswrite.length > 1) {
+                                $('#userwrite').text($('#userwrite').text() + userswrite[i]);
+                            } else {
+                                $('#userwrite').text(userswrite[i] + " está escrever... ✍🏻");
+                            }
+                        }
+                        setTimeout(function() {
+                            canChange = true;
+                            $('#userwrite').text("");
+
+                        }, 1500);
+
+                    }
+
+                }
+
+            });
+
+            socket.on('new vip', function(receiver) {
+                $chat.append('<div style="background: rgba(76, 255, 255, 0.3);" class="direct-chat-text"><strong> Server: ' + receiver + '</strong> Você agora é Administrator, pode utilizar comandos especiais!</div>');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+
+            socket.on('new mute', function(receiver) {
+                $chat.append('<div style="background: rgba(76, 255, 255, 0.3);" class="direct-chat-text"><strong> Server: ' + receiver + '</strong> foi silenciado pelo Moderador.</div>');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+
+            });
+
+
+            socket.on('remove mute', function(receiver) {
+                $chat.append('<div style="background: rgba(76, 255, 255, 0.3);" class="direct-chat-text"><strong> Server: ' + receiver + '</strong> já está autorizado a falar de novo.</div>');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                changeFavicon("http://downloadicons.net/sites/default/files/red-speech-bubble-icon-64862.png");
+
+            });
+
+
+
+
+            $messageForm.submit(function(e) {
+                e.preventDefault();
+                mensagem = $message.val();
+                var receiver = "";
+                var lastindex = 0;
+                var finalmessage = "";
+                if (mensagem[0] == "/" && mensagem[1] == "w") {
+
+                    for (var i = 3; i < mensagem.length; i++) {
+                        if (mensagem[i] != " ") {
+                            receiver = receiver + mensagem[i];
+                        } else {
+                            lastindex = i;
+                            break;
+                        }
+                    }
+
+                    for (var i = lastindex; i < mensagem.length; i++) {
+                        finalmessage += mensagem[i];
+                    }
+                    if (finalmessage.length > 0) {
+                        socket.emit('send message', finalmessage, receiver);
+                    }
+                    $message.val('');
+                } else if (mensagem[0] == "/" && mensagem[1] == "b") {
+                    for (var i = 3; i < mensagem.length; i++) {
+                        if (mensagem[i] != " ") {
+                            receiver = receiver + mensagem[i];
+                        } else {
+                            lastindex = i;
+                            break;
+                        }
+                    }
+
+                    for (var i = lastindex; i < mensagem.length; i++) {
+                        finalmessage += mensagem[i];
+                    }
+                    socket.emit('ban', receiver);
+                    $message.val('');
+
+                } else {
+                    if ($message.val().length > 0) {
+                        socket.emit('send message', $message.val(), receiver);
+                        socket.emit('translate', $message.val(),language);
+                    }
+                    $message.val('');
+                }
+
+            });
+
+            function youtube_parser(url) {
+                var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+                var match = url.match(regExp);
+                return (match && match[7].length == 11) ? match[7] : false;
+            }
+            socket.on('translateResponse', function(data, receiver, users) {
+                processMessage(data, receiver, users);
+            });
+            socket.on('new message', function(data, receiver, users) {
+                if (canTranslate) {
+                    socket.emit('translateMessage', data, receiver,users,language);
+                }else{
+                    processMessage(data, receiver, users);
+                }
+            });
+
+            function processMessage(data, receiver, users){
+                var isblock = false;
+                for (x in listblock) {
+                    if (listblock[x] == data.user) {
+                        isblock = true;
+                    }
+                }
+                if (receiver != "") {
+                    var color = "255, 0, 58, 0.3";
+                    for (var i = 0; i < listfollow.length; i++) {
+                        if (data.user == listfollow[i]) {
+                            color = "255,255,0,0.3";
+                        } else {
+                            color = "255, 0, 58, 0.3";
+                        }
+                    }
+
+
+                    if (data.user == user) {
+                        var str = data.msg;
+                        var n = str.indexOf("www.youtube.com/watch?v=");
+                        var x = (data.msg.length);
+                        var youtubeVideo = youtube_parser(data.msg.substring(n, x));
+                        if (youtubeVideo == false) {
+                            $chat.append('<div style="background: rgba(148, 229, 152, 0.3);"class="direct-chat-text-sender"><strong>Mensagem privada de: ' + data.user + '</strong> para <strong>' + receiver + ' : </strong> ' + data.msg + ' <span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                        } else {
+                            $chat.append('<div style="background: rgba(148, 229, 152, 0.3);" class="direct-chat-text"><strong>Mensagem privada de: ' + data.user + '</strong> para <strong>' + receiver + ' : </strong> ' + data.msg + '<p/><iframe id="video" width="95%"  height="220" src="//www.youtube.com/embed/' + youtubeVideo + '" frameborder="0" allowfullscreen></iframe><span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                        }
+                        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                    } else {
+                        if (isblock == false) {
+                            var str = data.msg;
+                            var n = str.indexOf("www.youtube.com/watch?v=");
+                            var x = (data.msg.length);
+                            var youtubeVideo = youtube_parser(data.msg.substring(n, x));
+                            if (youtubeVideo == false) {
+
+                                $chat.append('<div style="background: rgba(' + color + ');"class="direct-chat-text"><span class="glyphicon glyphicon-share-alt" onclick="document.getElementById(&#39;message&#39;).value = &#39;/w ' + data.user + ' &#39;"/> <strong>Mensagem privada de: ' + data.user + '</strong> para <strong>' + receiver + ' : </strong> ' + data.msg + ' <span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                            } else {
+                                $chat.append('<div style="background: rgba(' + color + ');" class="direct-chat-text"><span class="glyphicon glyphicon-share-alt" onclick="document.getElementById(&#39;message&#39;).value = &#39;/w ' + data.user + ' &#39;"/> <strong>Mensagem privada de: ' + data.user + '</strong> para <strong>' + receiver + ' : </strong> ' + data.msg + '<p/><iframe id="video" width="95%" height="220" src="//www.youtube.com/embed/' + youtubeVideo + '" frameborder="0" allowfullscreen></iframe><span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                            }
+
+                            $('#chat').scrollTop($('#chat')[0].scrollHeight);
+
+                            if (receiver == utilizadorativo) {
+                                changeFavicon("http://www.myiconfinder.com/uploads/iconsets/256-256-f269bbc2a3bd8805b0dccb6c36dd2fac.png");
+                                notifyMe("Mensagem Privada", data.user, data.msg);
+                            }
+                        }
+                    }
+                } else {
+                    if (data.user == user) {
+                        var str = data.msg;
+                        var n = str.indexOf("www.youtube.com/watch?v=");
+                        var x = (data.msg.length);
+                        var youtubeVideo = youtube_parser(data.msg.substring(n, x));
+                        if (youtubeVideo == false) {
+                            $chat.append('<div style="background: rgba(148, 229, 152, 0.3);" class="direct-chat-text-sender"><strong> ' + data.user + ':</strong> ' + data.msg + ' <span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                        } else {
+                            $chat.append('<div style="background: rgba(148, 229, 152, 0.3);" class="direct-chat-text"><strong> ' + data.user + ':</strong> ' + data.msg + '<p/><iframe id="video" width="95%" height="220" src="//www.youtube.com/embed/' + youtubeVideo + '" frameborder="0" allowfullscreen></iframe><span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                        }
+                        $('#chat').scrollTop($('#chat')[0].scrollHeight)
+                    } else {
+                        if (isblock == false) {
+                            var color = "";
+                            var notify = false;
+                            for (var i = 0; i < listfollow.length; i++) {
+                                if (data.user == listfollow[i]) {
+                                    color = "background: rgba(255,255,0,0.3);";
+                                    notify = true;
+                                } else {
+                                    color = "";
+                                    notify = false;
+                                }
+                            }
+                            var str = data.msg;
+                            var n = str.indexOf("www.youtube.com/watch?v=");
+                            var x = (data.msg.length);
+                            var youtubeVideo = youtube_parser(data.msg.substring(n, x));
+                            if (youtubeVideo == false) {
+                                $chat.append('<div style="' + color + '"class="direct-chat-text"><strong> ' + data.user + ':</strong> ' + data.msg + ' <span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                            } else {
+                                $chat.append('<div style="' + color + '"class="direct-chat-text"><strong> ' + data.user + ':</strong> ' + data.msg + '<p/><iframe id="video" width="95%" height="220" src="//www.youtube.com/embed/' + youtubeVideo + '" frameborder="0" allowfullscreen></iframe><span style= "font-size: 11px; font-weight: bold; float: right;"> ' + getTime() + ' </span></div>');
+                            }
+                            if (notify == true) {
+                                notifyMe("Mensagem de " + data.user, data.user, data.msg);
+                                changeFavicon("http://www.myiconfinder.com/uploads/iconsets/256-256-f269bbc2a3bd8805b0dccb6c36dd2fac.png");
+                            }
+                            $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                        }
+
+                    }
+
+                }
+            }
+
+            function sendMessage(e) {
+                var $target = $(e.target);
+                var index = $target.index();
+                var utilizador = $(this).text(); // gets text contents of clicked li
+                utilizador = utilizador.replace(/\s+/g, '');
+
+                $message.val('/w ' + e + ' ');
+            }
+
+            $backlogin.click(function(e) {
+                e.preventDefault();
+                $userFormArea.show();
+                $SignupPage.hide();
+
+            });
+
+            $Gosignup.click(function(e) {
+                e.preventDefault();
+                $userFormArea.hide();
+                $SignupPage.show();
+
+            });
+            $signup.click(function(e) {
+                e.preventDefault();
+                if ($sigusername.val() == "" || $sigpassword.val() == "" || $NomeUtilizador.val() == "") {
+                    alert("Por favor complete todos os campos!");
+                } else {
+                    socket.emit('new user', $sigusername.val(), $sigpassword.val(), $NomeUtilizador.val(), function(data, data1, nome) {
+                        if (data) {
+                            user = $username.val();
+                            utilizadorativo = user;
+                            $SignupPage.hide();
+                            $messageArea.show();
+                            $username.val('');
+                            $password.val('');
+                            $userFormArea.hide();
+                            $messageArea.show();
+                            $('#LogoutButtonHeader').show();
+                            $('#RoomsButton').show();
+                            $('#LanguageButton').show();
+                            $('#FicheirosPartilhados').show();
+                            $('#UserButton').show();
+                            $('#LabelRoomName').show();
+                            $('#LabelRoomName').text("convivio");
+                            $('#labelheader').text(utilizadorativo);
+                            $chat.html("");
+                        }
+                    });
+
+                }
+            });
+
+            $login.click(function() {
+                if ($username.val() == "" || $password.val() == "") {
+                    alert("Por favor complete todos os campos!");
+                } else {
+                    user = $username.val();
+                    utilizadorativo = user;
+                    socket.emit('new login', $username.val(), $password.val(), function(data, data1) {
+
+                    });
+                }
+            });
+
+
+            socket.on('error sign', function() {
+                alert("Não pode escolher esse utlizador, pois este já se encontra uma conta com esse nome!");
+            });
+
+            socket.on('error login', function() {
+                user = "";
+                utilizadorativo = "";
+                alert("Os Dados de Login estão incorrectos, por favor verifique se Nickname e a Password estão correctos!");
+            });
+
+            socket.on('error login2', function() {
+                user = "";
+                utilizadorativo = "";
+                alert("Esta conta de momento encontra-se em uso noutro dispositivo, se a conta é sua por favor contacte o administrador e explique o sucedido!");
+            });
+
+            socket.on('errorCreateRoom', function() {
+                alert("Ocorreu um erro ao criar a sala, verifique se o nome da sala já existe ou o comprimento é menor que 3 caracteres ou maior que 20!");
+            });
+
+            socket.on('true login', function() {
+                $userFormArea.hide();
+                $messageArea.show();
+                $('#LogoutButtonHeader').show();
+                $('#RoomsButton').show();
+                $('#LanguageButton').show();
+                $('#FicheirosPartilhados').show();
+                $('#UserButton').show();
+                $('#LabelRoomName').show();
+                $('#LabelRoomName').text("convivio");
+                $('#labelheader').text(utilizadorativo);
+                $chat.html("");
+                socket.emit('IsMod', utilizadorativo);
+            });
+
+            socket.on('IsModTrue', function() {
+                $('#buttoncreateRoom').show();
+            });
+
+            socket.on('disconnect', function() {
+                $userFormArea.show();
+                $messageArea.hide();
+                $username.val(utilizadorativo);
+                $('#LogoutButtonHeader').hide();
+                $('#LabelRoomName').hide();
+                $('#RoomsButton').hide();
+                $('#LanguageButton').hide();
+                $('#FicheirosPartilhados').hide();
+                $('#UserButton').hide();
+                $('#buttoncreateRoom').hide();
+                notifyMe("Você foi Disconectado", utilizadorativo, "a ligação ao servidor falhou!");
+            });
+
+            socket.on('lowpassword', function() {
+                alert("A Password que inseriu não corresponde aos parâmetros necessários, favor insira uma Password com comprimento mínimo de 7 caracteres!");
+            });
+
+            socket.on('restart complete', function() {
+                $chat.html('');
+                alert("SERVER IS OFF");
+                $userFormArea.show();
+                $messageArea.hide();
+            });
+            socket.on('get rooms', function(data) {
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    html += '<li><a><button id="Room' + data[i].room + '" onclick="ChangeRoom(&#39;' + data[i].room + '&#39;)" style="font-size: 17px; background-color: transparent; border: none;" class="glyphicon glyphicon-globe" data-toggle="tooltip" title="Mudar para sala  ' + data[i].room + '">  ' + data[i].room + ' (' + data[i].users.length + ')</button></a></li>';
+                }
+
+                $('#RoomsList').html(html);
+
+            });
+            socket.on('get users', function(data) {
+                var html = '';
+                var utilizadores = "";
+                var classfollow = "glyphicon glyphicon-eye-close";
+                var classblock = "glyphicon glyphicon-thumbs-up";
+                var color = "76, 215, 58, 0.2";
+
+                //console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i] != user) {
+                        for (var x = 0; x < listfollow.length; x++) {
+                            if (data[i] == listfollow[x]) {
+                                classfollow = "glyphicon glyphicon-eye-open";
+                                color = "255,255,0,0.3";
+                            } else {
+                                var color = "76, 215, 58, 0.2";
+                                classfollow = "glyphicon glyphicon-eye-close";
+                            }
+                        }
+
+                        for (var z = 0; z < listblock.length; z++) {
+                            if (data[i] == listblock[z]) {
+                                classblock = "  glyphicon glyphicon-thumbs-down";
+                                color = "255,0,0,0.3";
+                            } else {
+                                var color = "76, 215, 58, 0.2";
+                                classblock = "glyphicon glyphicon-thumbs-up";
+                            }
+                        }
+
+
+                        html += '<li id="Card' + data[i] + '"type="button" style="background: rgba(' + color + '); padding: right;" class="list-group-item"><i class="glyphicon glyphicon-user" style="margin-left: 0 !important"></i>  ' + data[i] + ' <button onclick="info(&#39;' + data[i] + '&#39;)" data-toggle="modal" data-target="#myModal" style="float: right; font-size: 15px; background-color: transparent; border: none;" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ver Perfil de ' + data[i] + '"></button>  <button onclick="document.getElementById(&#39;message&#39;).value = &#39;/w ' + data[i] + ' &#39;" style="float: right; font-size: 15px; background-color: transparent; border: none;" class="glyphicon glyphicon-comment" data-toggle="tooltip" title="Enviar Mensagem Privada para ' + data[i] + '"></button>  <button id="followUser' + data[i] + '" onclick="followUser(&#39;' + data[i] + '&#39;)"style="float: right; font-size: 15px; background-color: transparent; border: none;" class="' + classfollow + '" data-toggle="tooltip" title="Seguir as Mensagens de ' + data[i] + '"></button>  <button onclick="BlockUser(&#39;' + data[i] + '&#39;)" id="block' + data[i] + '"style="float: right; font-size: 15px; background-color: transparent; border: none; padding: right;" class="' + classblock + '" data-toggle="tooltip" title="Bloquear ' + data[i] + '"></button></li>  ';
+                    } else {
+                        html += '<li type="button" style="background: rgba(76, 215, 58, 0.2); padding: right;" class="list-group-item"><i class="glyphicon glyphicon-user" style="margin-left: 0 !important"></i>  ' + data[i] + ' <button onclick="info(&#39;' + data[i] + '&#39;)" data-toggle="modal" data-target="#myModal" style="float: right; font-size: 15px; background-color: transparent; border: none;" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ver Perfil de ' + data[i] + '"></button><button onclick="translationRequest(&#39;' + data[i] + '&#39;)" style="float: right; font-size: 15px; background-color: transparent; border: none;" class="glyphicon glyphicon-globe" data-toggle="tooltip" title="Traduzir mensagens para o seu idioma"></button></li>  ';
+                    }
+                }
+                $users.html(html);
+            });
+        });
+    </script>
+</body>
+
+</html>

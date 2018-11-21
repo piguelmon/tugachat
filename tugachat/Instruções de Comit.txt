@@ -1,0 +1,38 @@
+TODOS OS COMANDOS EXIGEM PRIVILÉGIOS DE ADMINISTRADOR
+
+NOTA: A APLICAÇÃO VAI SER INSTALADA NO PERFIL DO ADMINISTRADOR, PORTANTO PARA NAVEGAR PARA O CAMINHO FISICO TEM DE ACEDER
+A PASTA DO PERFIL DO ADMINISTRADOR.
+
+EXEMPLO: "C:\Users\admin\YOURAPPLICATION"
+ALTERAÇÃO DE FICHEIROS ORIGINAIS //
+1º - Fazer Comit com o Tortoise Git
+2º - Abrir GitBash (Verificar se ja fez login no Heroku, caso já tenha login no heroku com o git bash ignorar proximo passo)
+3º Fazer login no Heroku - ($ heroku login)
+4º Fazer push ( $ git push heroku master)
+5º Abrir Aplicação ($ heroku open)
+
+FAZER COMIT COM FICHEIROS NOVOS //
+
+1º Abrir GitBash (Verificar se ja fez login no Heroku, caso já tenha login no heroku com o git bash ignorar proximo passo)
+2º Fazer login no Heroku - ($ heroku login)
+3º Executar Add do git ( $ git add .)
+4º Fazer Comit com o Tortoise Git
+5º Fazer push ( $ git push heroku master)
+6º Abrir Aplicação ($ heroku open)
+
+FAZER COMIT COM FICHEIROS NOVOS Versão 2//
+
+1º Abrir CMD (Verificar se ja fez login no Heroku, caso já tenha login no heroku com o git bash ignorar proximo passo)
+2º Fazer login no Heroku - ($ heroku login)
+4º Fazer Comit com o Tortoise Git
+5º Fazer push ( $ git push heroku master) (CMD)
+6º Abrir Aplicação ($ heroku open)
+
+
+//CLONE DA APLICAÇÃO
+
+1º Abrir GitBash (Verificar se ja fez login no Heroku, caso já tenha login no heroku com o git bash ignorar proximo passo)
+2º Fazer login no Heroku - ($ heroku login)
+3º Executar Comando para clonar aplicação ($ heroku git:clone -a youraplication)
+4º Navegar para Aplicação ($ cd youraplication)
+5º Verificar se tem os ficheiros correctos ($ ls youraplication)
